@@ -1,0 +1,79 @@
+# 🚀 SprintSync CLI
+
+A Minimalist Agile Project Management Tool for Dev Teams
+
+SprintSync is a robust, object-oriented Command-Line Interface (CLI) designed for startup teams to manage projects, track tasks, and maintain productivity. Built with Python 3.10+, it features persistent storage, secure authentication, and a clean interactive UI.
+
+## 📋 Features
+
+- **Secure Authentication**: Password hashing using hashlib and role-based access control (Admin vs. User)
+- **Project Management**: Create, view, and track high-level project containers
+- **Task Tracking**: Granular task management with status toggles (Todo/Done)
+- **Persistent Storage**: All data is saved across sessions using organized JSON structures
+- **Beautiful CLI**: High-readability tables and status indicators powered by the Rich library
+
+## 🏗️ Architecture & OOP Principles
+
+SprintSync is built on solid Object-Oriented foundations:
+
+### Class Hierarchy (Inheritance)
+
+- **Person** (Base Class): Defines core identity attributes (name, email)
+- **User** (Subclass): Inherits from Person; adds password_hash, role (Admin/Dev), and user_id
+- **Project**: Manages a collection of tasks
+- **Task**: Individual units of work assigned to specific User IDs
+
+### Encapsulation & Logic
+
+- **Decorators**: Used for `@property` getters/setters and `@require_auth` to protect sensitive commands
+- **Validation**: Input handling to ensure due dates and emails follow correct formats
+
+##📂 File Structure
+
+SprintSync/
+├── main.py              # CLI Entry point (argparse subcommands)
+├── requirements.txt     # External dependencies (rich, etc.)
+├── models/
+│   ├── person.py        # Base class
+│   ├── user.py          # Inherited User class & logic
+│   ├── project.py       # Project class
+│   └── task.py          # Task class
+├── data/
+│   ├── users.json       # Persistent user records
+│   └── projects.json    # Project & Task data
+└── utils/
+    ├── auth.py          # Hashing & Decorator logic
+    └── storage.py       # JSON Load/Save handlers
+
+## 🛠️ Installation & Setup
+1. Clone the repository:
+
+git clone https://github.com/your-username/SprintSync.git
+cd SprintSync
+
+2. Install dependencies:
+pip install -r requirements.txt
+
+3.Initialize the app:
+python main.py setup  # Optional command to create initial JSON files
+
+##⌨️ Usage Examples
+
+Command,Action,Access
+python main.py register,Create a new account,Public
+python main.py login,Authenticate session,Public
+python main.py add-project,Create a new project,Admin Only
+python main.py list-tasks,View all tasks in a project,User/Admin
+python main.py complete-task [ID],Mark a task as done,Assigned User
+
+🤝 Team Collaboration (Git Workflow)
+We follow a strict feature-branch workflow to ensure code quality:
+
+Branching: No direct commits to main. Branches are named feat/feature-name or fix/issue-name.
+
+Tracking: Tasks are managed via [Insert Tool Name: e.g., Trello/Jira].
+
+Review: All code is reviewed by at least one teammate before merging.
+
+⚖️ License
+This project is developed for educational purposes as part of the Summative Group Lab.
