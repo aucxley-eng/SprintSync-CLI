@@ -21,6 +21,7 @@ schema = {
 }
 
 class JSONManager:
+    
     @staticmethod
     def load_projects():
         try:
