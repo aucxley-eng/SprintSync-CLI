@@ -1,38 +1,21 @@
 import uuid
+from models.task import Task
 
 class Project:
-    def __init__(self, title, description, due_date, project_id=None):
-        self.project_id = project_id or str(uuid.uuid4())[:8]
-        self.title = title
-        self.description = description
-        self.due_date = due_date
-        self.__tasks = []  # Encapsulation: Private list of tasks
+    def __init__(self, name: str, deadline: str):
+        if not name:
+            raise ValueError("Project name cannot be empty.")
+        # TODO: validate deadline is not in the past
+        self.project_id = str(uuid.uuid4())[:8]
+        self.name = name
+        self.deadline = deadline
+        self.tasks = []
 
-    @property
-    def tasks(self):
-        """Getter for tasks - prevents direct overwriting of the list"""
-        return self.__tasks
+    def add_task(self, task: Task):
+        self.tasks.append(task)
 
-    def add_task(self, task_obj):
-        """Associates a Task object with this project"""
-        self.__tasks.append(task_obj)
-
-    def calculate_progress(self):
-        """Calculates percentage of completed tasks"""
-        if not self.__tasks:
-            return 0
-        completed = [t for t in self.__tasks if t.status == "Done"]
-        return (len(completed) / len(self.__tasks)) * 100
-
-    def to_dict(self):
-        """Converts object to dictionary for JSON storage"""
-        return {
-            "project_id": self.project_id,
-            "title": self.title,
-            "description": self.description,
-            "due_date": self.due_date,
-            "tasks": [t.to_dict() for t in self.__tasks]
-        }
-
-    def __str__(self):
-        return f"Project: {self.title} ({self.calculate_progress()}% Complete)"
+    def calculate_progress(self) -> float:
+        if not self.tasks:
+            return 0.0
+        completed = sum(1 for t in self.tasks if t.status == "Done")
+        return (completed / len(self.tasks)) * 100
