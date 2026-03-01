@@ -12,10 +12,11 @@ schema = {
   "type": "array",
   "items": {
     "type": "object",
-    "required": ["name", "description"],
+    "required": ["name", "description", "owner"],
     "properties": {
       "name": { "type": "string" },
-      "description": { "type": "string" }
+      "description": { "type": "string" },
+      "owner": {"type": "string"}
     }
   }
 }
@@ -51,10 +52,9 @@ class JSONManager:
             with open(FILE_PATH, 'w') as file:
                 #dump is used to save data to the json file
                 json.dump(data, file, indent=4)
-                print('Project saved!')
 
         except ValidationError as e:
-            print(f"Invalid data: {e}")
+            print(f"Invalid data: {e.message}")
 
 
     @staticmethod

@@ -77,7 +77,7 @@ def login_user(username, password):
                     if user['username'] == username:
                             if verify_password(password, user["password"]):
                                     current_user = user
-                                    print(f"Logged in as {username} ({user["role"]})")
+                                    print(f"Logged in as {username} ({user['role']})")
                                     return True
                             else:
                                     print("Incorrect password!")
