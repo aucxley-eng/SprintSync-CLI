@@ -1,9 +1,10 @@
 import hashlib
 import os
 import json
+from typing import Any, Dict, List, Optional
 from jsonschema import validate, ValidationError
 
-schema = {
+schema: Dict[str, Any] = {
     "type": "object",
     "properties": {
         "id": {"type": "number"},
@@ -14,7 +15,7 @@ schema = {
     "required": ["username", "password", "role"]
 }
 
-current_user = None
+current_user: Optional[Dict[str, Any]] = None
 
 FILE_BASE = os.path.dirname(os.path.dirname(__file__))
 DATA_DIR = os.path.join(FILE_BASE, "data")
@@ -28,7 +29,7 @@ def verify_password(password: str, hashed_password: str) -> bool:
         return hash_password(password) == hashed_password
 
 
-def load_user():
+def load_user() -> List[Dict[str, Any]]:
         try:
                 with open(FILE_PATH, "r") as file:
                         return json.load(file)
@@ -37,11 +38,11 @@ def load_user():
                 return []
 
 
-def add_users(new_user):
+def add_users(new_user: List[Dict[str, Any]]) -> None:
             with open(FILE_PATH, "w") as file:
                      json.dump(new_user, file, indent=4)
               
-def register_users(username, password, role):
+def register_users(username: str, password: str, role: str) -> None:
         users = load_user()
 
         if users:
@@ -52,7 +53,7 @@ def register_users(username, password, role):
 
         hashed_pw = hash_password(password)
 
-        new_user = {
+        new_user: Dict[str, Any] = {
                "id": new_id,
                "username" : username,
                "password": hashed_pw,
@@ -70,7 +71,7 @@ def register_users(username, password, role):
         print("User added successfuly!")
 
 
-def login_user(username, password):
+def login_user(username: str, password: str) -> bool:
         global current_user
         users = load_user()
         for user in users:
