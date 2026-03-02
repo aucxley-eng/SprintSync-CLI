@@ -7,7 +7,6 @@ from utils.storage import JSONManager
 
 console = Console()
 
-
 def cmd_register():
     console.print("Enter username:", style="bold cyan")
     username = input()
@@ -51,7 +50,6 @@ def cmd_add_project():
         time=now,
         deadline=deadline
     )
-
 
 def cmd_list_projects():
     projects = JSONManager.list_projects()

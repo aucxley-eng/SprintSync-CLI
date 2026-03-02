@@ -28,5 +28,25 @@
         "time_created": "2026-03-01 17:04:59",
         "deadline": "2026-03-15",
         "tasks": []
+    },
+    {
+        "id": 4,
+        "name": "Smart-Management-tool",
+        "description": "A mechatronics project integrating embedded systems together",
+        "status": "Active",
+        "owner": "Hillary",
+        "time_created": "2026-03-01 23:54:24",
+        "deadline": "2026-07-07",
+        "tasks": []
+    },
+    {
+        "id": 5,
+        "name": "Sprintsync",
+        "description": "A system for devs",
+        "status": "Active",
+        "owner": "Hillary",
+        "time_created": "2026-03-02 16:03:10",
+        "deadline": "2026-04-19",
+        "tasks": []
     }
 ]
