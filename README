@@ -1,10 +1,10 @@
-# 🚀 SprintSync CLI
+# SprintSync CLI
 
 A Minimalist Agile Project Management Tool for Dev Teams
 
 SprintSync is a robust, object-oriented Command-Line Interface (CLI) designed for startup teams to manage projects, track tasks, and maintain productivity. Built with Python 3.10+, it features persistent storage, secure authentication, and a clean interactive UI.
 
-## 📋 Features
+# Features
 
 - **Secure Authentication**: Password hashing using hashlib and role-based access control (Admin vs. User)
 - **Project Management**: Create, view, and track high-level project containers
@@ -12,7 +12,7 @@ SprintSync is a robust, object-oriented Command-Line Interface (CLI) designed fo
 - **Persistent Storage**: All data is saved across sessions using organized JSON structures
 - **Beautiful CLI**: High-readability tables and status indicators powered by the Rich library
 
-## 🏗️ Architecture & OOP Principles
+# Architecture & OOP Principles
 
 SprintSync is built on solid Object-Oriented foundations:
 
@@ -28,7 +28,7 @@ SprintSync is built on solid Object-Oriented foundations:
 - **Decorators**: Used for `@property` getters/setters and `@require_auth` to protect sensitive commands
 - **Validation**: Input handling to ensure due dates and emails follow correct formats
 
-##📂 File Structure
+# File Structure
 
 SprintSync/
 ├── main.py              # CLI Entry point (argparse subcommands)
@@ -66,7 +66,7 @@ python main.py add-project,Create a new project,Admin Only
 python main.py list-tasks,View all tasks in a project,User/Admin
 python main.py complete-task [ID],Mark a task as done,Assigned User
 
-🤝 Team Collaboration (Git Workflow)
+Team Collaboration (Git Workflow)
 We follow a strict feature-branch workflow to ensure code quality:
 
 Branching: No direct commits to main. Branches are named feat/feature-name or fix/issue-name.
@@ -75,5 +75,6 @@ Tracking: Tasks are managed via [Insert Tool Name: e.g., Trello/Jira].
 
 Review: All code is reviewed by at least one teammate before merging.
 
-⚖️ License
+License
+
 This project is developed for educational purposes as part of the Summative Group Lab.
