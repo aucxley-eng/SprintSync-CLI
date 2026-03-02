@@ -1,6 +1,7 @@
 #First by importing a JSON package used to work with json data
 import json
 import os
+from typing import Any, Dict, List
 from jsonschema import validate, ValidationError
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -8,7 +9,7 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 FILE_PATH = os.path.join(DATA_DIR, "projects.json")
 
 #Generated a structure for validating the input details of project
-schema = {
+schema: Dict[str, Any] = {
   "type": "array",
   "items": {
     "type": "object",
@@ -24,7 +25,7 @@ schema = {
 class JSONManager:
     
     @staticmethod
-    def load_projects():
+    def load_projects() -> List[Dict[str, Any]]:
         try:
             with open(FILE_PATH, "r") as file:
                 data = json.load(file)
@@ -43,7 +44,7 @@ class JSONManager:
             return []
 
     @staticmethod  #used to define a method that doesnt depend on class
-    def save_projects(data):
+    def save_projects(data: List[Dict[str, Any]]) -> None:
         try:
             #validated the input
             validate(instance=data, schema=schema)
@@ -58,7 +59,7 @@ class JSONManager:
 
 
     @staticmethod
-    def add_project(name, description,status,owner,time):
+    def add_project(name: str, description: str, status: str, owner: str, time: str) -> None:
         projects = JSONManager.load_projects()
 
         #auto increment id
@@ -68,7 +69,7 @@ class JSONManager:
         else:
             new_id = 1
             
-        project = {
+        project: Dict[str, Any] = {
             "id" : new_id,
             "name" : name,
             "description" : description,
