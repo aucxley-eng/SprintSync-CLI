@@ -13,7 +13,6 @@ schema = {
     },
     "required": ["username", "password", "role"]
 }
-
 # current_user is initialised after helpers are defined (see below)
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -30,11 +29,9 @@ def _load_session():
     except (FileNotFoundError, json.JSONDecodeError):
         return None
 
-
 def _save_session(user):
     with open(SESSION_FILE, "w") as f:
         json.dump(user, f, indent=4)
-
 
 def _clear_session():
     try:
@@ -42,17 +39,13 @@ def _clear_session():
     except FileNotFoundError:
         pass
 
-
 current_user = _load_session()
-
 
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
-
 def verify_password(password: str, hashed_password: str) -> bool:
     return hash_password(password) == hashed_password
-
 
 def load_users():
     try:
@@ -64,11 +57,9 @@ def load_users():
         print("Access denied")
         return []
 
-
 def save_users(users):
     with open(USER_FILE, "w") as f:
         json.dump(users, f, indent=4)
-
 
 def register_users(username, password, role):
     users = load_users()
@@ -86,7 +77,6 @@ def register_users(username, password, role):
     save_users(users)
     print("[green]User added successfully![/green]")
 
-
 def login_user(username, password):
     global current_user
     users = load_users()
@@ -102,7 +92,6 @@ def login_user(username, password):
                 return False
     print("Username not found!")
     return False
-
 
 def logout_user():
     global current_user

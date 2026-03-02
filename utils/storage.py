@@ -23,7 +23,6 @@ schema = {
         }
     }
 }
-
 class JSONManager:
 
     @staticmethod
@@ -59,7 +58,8 @@ class JSONManager:
     @staticmethod
     def add_project(name, description, status, owner, time, deadline):
         projects = JSONManager.load_projects()
-        new_id = max([p.get("id", 0) for p in projects], default=0) + 1
+        existing_ids = [p.get("id", 0) for p in projects]
+        new_id = max(existing_ids, default=0) +1
         project = {
             "id": new_id,
             "name": name,
@@ -77,3 +77,48 @@ class JSONManager:
     @staticmethod
     def list_projects():
         return JSONManager.load_projects()
+    
+    @staticmethod
+    def update_project(data):
+        project_id = int(input('Enter project id to update : '))
+
+        project = next((p for p in data if p["id"] == project_id), None)
+
+        if not project:
+            print("Project not found")
+            return
+        
+        project["name"] = input("Enter a new project name :")
+        project["description"] = input("Enter a new project description :")
+
+        try:
+            with open(PROJECT_FILE, "w") as file:
+                json.dump(data, file, indent=4)
+                print("Project updated successfuly!")
+        except Exception as e:
+            print(f"Error:, {e}")
+            return[]
+
+    @staticmethod
+    def delete_project(data):
+
+        project_id = int(input("Enter project id to delete :"))
+
+        project = next((p for p in data if p["id"] == project_id), None)
+
+        if not project:
+            print("Project not found")
+            return
+        
+        data.remove(project)
+
+        try:
+            with open(PROJECT_FILE, "w") as file:
+                json.dump(data, file, indent=4)
+            print("Project deleted successfully!")
+        except Exception as e:
+            print(f"Error: {e}")
+
+
+
+        
