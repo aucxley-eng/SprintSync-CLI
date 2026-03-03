@@ -1,1 +1,20 @@
-[]
+[
+    {
+        "id": 1,
+        "username": "manu",
+        "password": "bccc187b9613106c767bfcbbf3f8c6afa28a9a2f4e56cf631bf5f5cf927c0c9d",
+        "role": "Admin"
+    },
+    {
+        "id": 2,
+        "username": "Hillary",
+        "password": "937b119c4a1a13adaef576525c9e5619a89fcd0113db26acda57992b24ee7f63",
+        "role": "User"
+    },
+    {
+        "id": 3,
+        "username": "Hillary",
+        "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+        "role": "uSER"
+    }
+]

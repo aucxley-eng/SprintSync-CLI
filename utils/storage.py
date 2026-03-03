@@ -1,4 +1,3 @@
-#First by importing a JSON package used to work with json data
 import json
 import os
 from typing import Any, Dict, List
@@ -6,7 +5,7 @@ from jsonschema import validate, ValidationError
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
-FILE_PATH = os.path.join(DATA_DIR, "projects.json")
+PROJECT_FILE = os.path.join(DATA_DIR, "projects.json")
 
 #Generated a structure for validating the input details of project
 schema: Dict[str, Any] = {
@@ -19,28 +18,28 @@ schema: Dict[str, Any] = {
       "description": { "type": "string" },
       "owner": {"type": "string"}
     }
-  }
 }
-
 class JSONManager:
-    
+
     @staticmethod
     def load_projects() -> List[Dict[str, Any]]:
         try:
-            with open(FILE_PATH, "r") as file:
-                data = json.load(file)
+            with open(PROJECT_FILE, "r") as f:
+                data = json.load(f)
+                # Ensure old projects have deadline and tasks
+                for p in data:
+                    if "deadline" not in p:
+                        p["deadline"] = "N/A"
+                    if "tasks" not in p:
+                        p["tasks"] = []
                 return data
-    #Exception for when the file is not found in the directory
         except FileNotFoundError:
-            print(f'Error:No such file as : {FILE_PATH}')
             return []
-    #Exception for when no persmission to read file 
         except PermissionError:
-            print(f'Error :No permission to read file')
+            print("[red]No permission to read file[/red]")
             return []
-    #EXception for an invalid JSON file
         except json.JSONDecodeError as e:
-            print(f'Error : Invalid JSON in file - {e}')
+            print(f"[red]Invalid JSON: {e}[/red]")
             return []
 
     @staticmethod  #used to define a method that doesnt depend on class
@@ -61,22 +60,67 @@ class JSONManager:
     @staticmethod
     def add_project(name: str, description: str, status: str, owner: str, time: str) -> None:
         projects = JSONManager.load_projects()
-
-        #auto increment id
-        if projects:
-            max_id = max(p.get("id", 0) for p in projects)
-            new_id = max_id + 1
-        else:
-            new_id = 1
-            
-        project: Dict[str, Any] = {
-            "id" : new_id,
-            "name" : name,
-            "description" : description,
+        existing_ids = [p.get("id", 0) for p in projects]
+        new_id = max(existing_ids, default=0) +1
+        project = {
+            "id": new_id,
+            "name": name,
+            "description": description,
             "status": status,
-            "owner" : owner,
-            "time_created" : time
+            "owner": owner,
+            "time_created": time,
+            "deadline": deadline,
+            "tasks": []
         }
         projects.append(project)
         JSONManager.save_projects(projects)
-        print(f"Project '{name}' saved successfully!")
+        print(f"[green]Project '{name}' added successfully![/green]")
+
+    @staticmethod
+    def list_projects():
+        return JSONManager.load_projects()
+    
+    @staticmethod
+    def update_project(data):
+        project_id = int(input('Enter project id to update : '))
+
+        project = next((p for p in data if p["id"] == project_id), None)
+
+        if not project:
+            print("Project not found")
+            return
+        
+        project["name"] = input("Enter a new project name :")
+        project["description"] = input("Enter a new project description :")
+
+        try:
+            with open(PROJECT_FILE, "w") as file:
+                json.dump(data, file, indent=4)
+                print("Project updated successfuly!")
+        except Exception as e:
+            print(f"Error:, {e}")
+            return[]
+
+    @staticmethod
+    def delete_project(data):
+
+        project_id = int(input("Enter project id to delete :"))
+
+        project = next((p for p in data if p["id"] == project_id), None)
+
+        if not project:
+            print("Project not found")
+            return
+        
+        data.remove(project)
+
+        try:
+            with open(PROJECT_FILE, "w") as file:
+                json.dump(data, file, indent=4)
+            print("Project deleted successfully!")
+        except Exception as e:
+            print(f"Error: {e}")
+
+
+
+        
