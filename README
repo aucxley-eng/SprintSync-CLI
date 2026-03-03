@@ -2,15 +2,19 @@
 
 A Minimalist Agile Project Management Tool for Dev Teams
 
-SprintSync is a robust, object-oriented Command-Line Interface (CLI) designed for startup teams to manage projects, track tasks, and maintain productivity. Built with Python 3.10+, it features persistent storage, secure authentication, and a clean interactive UI.
+SprintSync is a robust, object-oriented Command-Line Interface (CLI) designed for startup teams to manage projects and maintain productivity. Built with Python 3.10+, it features persistent JSON storage, secure authentication, and a clean interactive UI powered by the Rich library.
+
+---
 
 # Features
 
-- **Secure Authentication**: Password hashing using hashlib and role-based access control (Admin vs. User)
-- **Project Management**: Create, view, and track high-level project containers
-- **Task Tracking**: Granular task management with status toggles (Todo/Done)
-- **Persistent Storage**: All data is saved across sessions using organized JSON structures
-- **Beautiful CLI**: High-readability tables and status indicators powered by the Rich library
+- **Secure Authentication**: Password hashing via `hashlib` (SHA-256) with role-based access control (Admin / User)
+- **Session Persistence**: Login sessions are saved to disk — stay logged in across runs
+- **Project Management**: Create and list projects with deadlines, statuses, and task counts
+- **Data Validation**: JSON schema validation via `jsonschema` for both users and projects
+- **Beautiful CLI**: Rich-powered tables, colour-coded output, and a clean interactive menu
+
+---
 
 # Architecture & OOP Principles
 
@@ -18,63 +22,91 @@ SprintSync is built on solid Object-Oriented foundations:
 
 ### Class Hierarchy (Inheritance)
 
-- **Person** (Base Class): Defines core identity attributes (name, email)
-- **User** (Subclass): Inherits from Person; adds password_hash, role (Admin/Dev), and user_id
-- **Project**: Manages a collection of tasks
-- **Task**: Individual units of work assigned to specific User IDs
+- **Person** (Base Class): Defines core identity attributes (`name`, `email`)
+- **User** (Subclass of Person): Inherits from `Person`; adds `password_hash` and `role`
+- **Project**: Manages project metadata (`title`, `description`, `due_date`, `members`)
 
 ### Encapsulation & Logic
 
-- **Decorators**: Used for `@property` getters/setters and `@require_auth` to protect sensitive commands
-- **Validation**: Input handling to ensure due dates and emails follow correct formats
+- Password hashing is encapsulated in `utils/auth_tools.py` — raw passwords never touch storage
+- JSON schema validation is applied on every write to `users.json` and `projects.json`
+- Session state is managed through `session.json` and loaded automatically on startup
+
+---
 
 # File Structure
 
-SprintSync/
-├── main.py              # CLI Entry point (argparse subcommands)
-├── requirements.txt     # External dependencies (rich, etc.)
+```
+SprintSync-CLI/
+├── main.py                  # CLI entry point — interactive menu loop
 ├── models/
-│   ├── person.py        # Base class
-│   ├── user.py          # Inherited User class & logic
-│   ├── project.py       # Project class
-│   └── task.py          # Task class
-├── data/
-│   ├── users.json       # Persistent user records
-│   └── projects.json    # Project & Task data
-└── utils/
-    ├── auth.py          # Hashing & Decorator logic
-    └── storage.py       # JSON Load/Save handlers
+│   ├── person.py            # Base Person class (name, email)
+│   ├── user.py              # User class — inherits Person, adds auth fields
+│   └── project.py           # Project class — manages project data & members
+├── utils/
+│   ├── auth_tools.py        # Hashing, login, register, session management
+│   └── storage.py           # JSON load/save handlers (JSONManager)
+└── data/
+    ├── users.json            # Persistent user records (auto-created)
+    ├── projects.json         # Persistent project data (auto-created)
+    └── session.json          # Active login session (auto-created on login)
+```
 
-## 🛠️ Installation & Setup
-1. Clone the repository:
+---
 
-git clone https://github.com/your-username/SprintSync.git
-cd SprintSync
+# Installation & Setup
 
-2. Install dependencies:
+**1. Clone the repository:**
+```bash
+git clone https://github.com/your-username/SprintSync-CLI.git
+cd SprintSync-CLI
+```
+
+**2. Install dependencies:**
+```bash
 pip install -r requirements.txt
+```
 
-3.Initialize the app:
-python main.py setup  # Optional command to create initial JSON files
+**3. Run the app:**
+```bash
+python main.py
+```
 
-##⌨️ Usage Examples
+> The `data/` directory and JSON files are created automatically on first run.
 
-Command,Action,Access
-python main.py register,Create a new account,Public
-python main.py login,Authenticate session,Public
-python main.py add-project,Create a new project,Admin Only
-python main.py list-tasks,View all tasks in a project,User/Admin
-python main.py complete-task [ID],Mark a task as done,Assigned User
+---
 
-Team Collaboration (Git Workflow)
+# Usage
+
+SprintSync uses an **interactive menu** — no command-line arguments needed.
+
+### When logged out:
+```
+1. Register    — Create a new account (username, password, role)
+2. Login       — Authenticate with your username and password
+0. Exit
+```
+
+### When logged in:
+```
+1. Add Project  — Create a new project (name, description, deadline)
+2. List Projects — View all projects in a formatted table
+9. Switch Account — Clear session and return to login screen
+0. Exit
+```
+
+---
+
+# Team Collaboration (Git Workflow)
+
 We follow a strict feature-branch workflow to ensure code quality:
 
-Branching: No direct commits to main. Branches are named feat/feature-name or fix/issue-name.
+- **Branching**: No direct commits to `main`. Branches are named `feat/feature-name` or `fix/issue-name`.
+- **Tracking**: Tasks are managed via [Insert Tool: e.g. Trello / Jira].
+- **Review**: All code is reviewed by at least one teammate before merging.
 
-Tracking: Tasks are managed via [Insert Tool Name: e.g., Trello/Jira].
+---
 
-Review: All code is reviewed by at least one teammate before merging.
-
-License
+# License
 
 This project is developed for educational purposes as part of the Summative Group Lab.

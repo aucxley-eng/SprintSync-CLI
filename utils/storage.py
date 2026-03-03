@@ -18,7 +18,9 @@ schema: Dict[str, Any] = {
       "description": { "type": "string" },
       "owner": {"type": "string"}
     }
+  }
 }
+
 class JSONManager:
 
     @staticmethod
@@ -42,26 +44,21 @@ class JSONManager:
             print(f"[red]Invalid JSON: {e}[/red]")
             return []
 
-    @staticmethod  #used to define a method that doesnt depend on class
+    @staticmethod
     def save_projects(data: List[Dict[str, Any]]) -> None:
         try:
-            #validated the input
             validate(instance=data, schema=schema)
-
-            #save to JSON file
-            with open(FILE_PATH, 'w') as file:
-                #dump is used to save data to the json file
+            with open(PROJECT_FILE, 'w') as file:
                 json.dump(data, file, indent=4)
-
         except ValidationError as e:
             print(f"Invalid data: {e.message}")
 
-
     @staticmethod
-    def add_project(name: str, description: str, status: str, owner: str, time: str) -> None:
+    def add_project(name: str, description: str, status: str, owner: str,
+                    time: str, deadline: str = "N/A") -> None:
         projects = JSONManager.load_projects()
         existing_ids = [p.get("id", 0) for p in projects]
-        new_id = max(existing_ids, default=0) +1
+        new_id = max(existing_ids, default=0) + 1
         project = {
             "id": new_id,
             "name": name,
@@ -79,39 +76,36 @@ class JSONManager:
     @staticmethod
     def list_projects():
         return JSONManager.load_projects()
-    
+
     @staticmethod
     def update_project(data):
         project_id = int(input('Enter project id to update : '))
-
         project = next((p for p in data if p["id"] == project_id), None)
 
         if not project:
             print("Project not found")
             return
-        
+
         project["name"] = input("Enter a new project name :")
         project["description"] = input("Enter a new project description :")
 
         try:
             with open(PROJECT_FILE, "w") as file:
                 json.dump(data, file, indent=4)
-                print("Project updated successfuly!")
+                print("Project updated successfully!")
         except Exception as e:
             print(f"Error:, {e}")
-            return[]
+            return []
 
     @staticmethod
     def delete_project(data):
-
         project_id = int(input("Enter project id to delete :"))
-
         project = next((p for p in data if p["id"] == project_id), None)
 
         if not project:
             print("Project not found")
             return
-        
+
         data.remove(project)
 
         try:
@@ -120,7 +114,3 @@ class JSONManager:
             print("Project deleted successfully!")
         except Exception as e:
             print(f"Error: {e}")
-
-
-
-        

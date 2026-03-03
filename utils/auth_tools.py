@@ -40,7 +40,6 @@ def _clear_session():
     except FileNotFoundError:
         pass
 
-current_user = _load_session()
 
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
@@ -108,4 +107,4 @@ def logout_user():
     else:
         print("No user is currently logged in")
 
-current_user: Optional[Dict[str, Any]] = _load_session()
+current_user: Optional[Dict[str, Any]] = None
