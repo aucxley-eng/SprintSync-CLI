@@ -1,9 +1,10 @@
 import hashlib
 import os
 import json
+from typing import Any, Dict, List, Optional
 from jsonschema import validate, ValidationError
 
-schema = {
+schema: Dict[str, Any] = {
     "type": "object",
     "properties": {
         "id": {"type": "number"},
@@ -14,7 +15,11 @@ schema = {
     "required": ["username", "password", "role"]
 }
 
+<<<<<<< HEAD
 # current_user is initialised after helpers are defined (see below)
+=======
+current_user: Optional[Dict[str, Any]] = None
+>>>>>>> development
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -54,6 +59,7 @@ def verify_password(password: str, hashed_password: str) -> bool:
     return hash_password(password) == hashed_password
 
 
+<<<<<<< HEAD
 def load_users():
     try:
         with open(USER_FILE, "r") as f:
@@ -75,6 +81,23 @@ def register_users(username, password, role):
     new_id = max([u.get("id", 0) for u in users], default=0) + 1
     hashed_pw = hash_password(password)
     new_user = {"id": new_id, "username": username, "password": hashed_pw, "role": role}
+=======
+def load_user() -> List[Dict[str, Any]]:
+        try:
+                with open(FILE_PATH, "r") as file:
+                        return json.load(file)
+        except PermissionError:
+                print("Access denied")
+                return []
+
+
+def add_users(new_user: List[Dict[str, Any]]) -> None:
+            with open(FILE_PATH, "w") as file:
+                     json.dump(new_user, file, indent=4)
+              
+def register_users(username: str, password: str, role: str) -> None:
+        users = load_user()
+>>>>>>> development
 
     try:
         validate(new_user, schema)
@@ -82,6 +105,7 @@ def register_users(username, password, role):
         print(f"Invalid user data: {e.message}")
         return
 
+<<<<<<< HEAD
     users.append(new_user)
     save_users(users)
     print("[green]User added successfully![/green]")
@@ -104,6 +128,45 @@ def login_user(username, password):
     return False
 
 
+=======
+        hashed_pw = hash_password(password)
+
+        new_user: Dict[str, Any] = {
+               "id": new_id,
+               "username" : username,
+               "password": hashed_pw,
+               "role" : role
+        }
+
+        try:
+                validate(instance=new_user, schema=schema)
+        except ValidationError as e:
+                print(f"Invalid user data: {e.message}")
+                return
+
+        users.append(new_user)
+        add_users(users)
+        print("User added successfuly!")
+
+
+def login_user(username: str, password: str) -> bool:
+        global current_user
+        users = load_user()
+        for user in users:
+                    if user['username'] == username:
+                            if verify_password(password, user["password"]):
+                                    current_user = user
+                                    print(f"Logged in as {username} ({user['role']})")
+                                    return True
+                            else:
+                                    print("Incorrect password!")
+                                    return False
+                            
+        
+        print("Username not found!")
+        return False
+                
+>>>>>>> development
 def logout_user():
     global current_user
     if current_user:

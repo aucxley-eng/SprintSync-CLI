@@ -1,11 +1,13 @@
 import json
 import os
+from typing import Any, Dict, List
 from jsonschema import validate, ValidationError
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 PROJECT_FILE = os.path.join(DATA_DIR, "projects.json")
 
+<<<<<<< HEAD
 schema = {
     "type": "array",
     "items": {
@@ -21,13 +23,25 @@ schema = {
             "deadline": {"type": "string"},
             "tasks": {"type": "array"}
         }
+=======
+#Generated a structure for validating the input details of project
+schema: Dict[str, Any] = {
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["name", "description", "owner"],
+    "properties": {
+      "name": { "type": "string" },
+      "description": { "type": "string" },
+      "owner": {"type": "string"}
+>>>>>>> development
     }
 }
 
 class JSONManager:
 
     @staticmethod
-    def load_projects():
+    def load_projects() -> List[Dict[str, Any]]:
         try:
             with open(PROJECT_FILE, "r") as f:
                 data = json.load(f)
@@ -47,6 +61,7 @@ class JSONManager:
             print(f"[red]Invalid JSON: {e}[/red]")
             return []
 
+<<<<<<< HEAD
     @staticmethod
     def save_projects(data):
         try:
@@ -64,6 +79,38 @@ class JSONManager:
             "id": new_id,
             "name": name,
             "description": description,
+=======
+    @staticmethod  #used to define a method that doesnt depend on class
+    def save_projects(data: List[Dict[str, Any]]) -> None:
+        try:
+            #validated the input
+            validate(instance=data, schema=schema)
+
+            #save to JSON file
+            with open(FILE_PATH, 'w') as file:
+                #dump is used to save data to the json file
+                json.dump(data, file, indent=4)
+
+        except ValidationError as e:
+            print(f"Invalid data: {e.message}")
+
+
+    @staticmethod
+    def add_project(name: str, description: str, status: str, owner: str, time: str) -> None:
+        projects = JSONManager.load_projects()
+
+        #auto increment id
+        if projects:
+            max_id = max(p.get("id", 0) for p in projects)
+            new_id = max_id + 1
+        else:
+            new_id = 1
+            
+        project: Dict[str, Any] = {
+            "id" : new_id,
+            "name" : name,
+            "description" : description,
+>>>>>>> development
             "status": status,
             "owner": owner,
             "time_created": time,
