@@ -60,18 +60,12 @@ class JSONManager:
     @staticmethod
     def add_project(name: str, description: str, status: str, owner: str, time: str) -> None:
         projects = JSONManager.load_projects()
-
-        #auto increment id
-        if projects:
-            max_id = max(p.get("id", 0) for p in projects)
-            new_id = max_id + 1
-        else:
-            new_id = 1
-            
-        project: Dict[str, Any] = {
-            "id" : new_id,
-            "name" : name,
-            "description" : description,
+        existing_ids = [p.get("id", 0) for p in projects]
+        new_id = max(existing_ids, default=0) +1
+        project = {
+            "id": new_id,
+            "name": name,
+            "description": description,
             "status": status,
             "owner": owner,
             "time_created": time,

@@ -14,6 +14,7 @@ schema: Dict[str, Any] = {
     },
     "required": ["username", "password", "role"]
 }
+# current_user is initialised after helpers are defined (see below)
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -29,7 +30,7 @@ def _load_session() -> Optional[Dict[str, Any]]:
     except (FileNotFoundError, json.JSONDecodeError):
         return None
 
-def _save_session(user: Dict[str, Any]) -> None:
+def _save_session(user):
     with open(SESSION_FILE, "w") as f:
         json.dump(user, f, indent=4)
 
@@ -47,7 +48,7 @@ def hash_password(password: str) -> str:
 def verify_password(password: str, hashed_password: str) -> bool:
     return hash_password(password) == hashed_password
 
-def load_users() -> List[Dict[str, Any]]:
+def load_users():
     try:
         with open(USER_FILE, "r") as f:
             return json.load(f)
@@ -57,11 +58,11 @@ def load_users() -> List[Dict[str, Any]]:
         print("Access denied")
         return []
 
-def save_users(users: List[Dict[str, Any]]) -> None:
+def save_users(users):
     with open(USER_FILE, "w") as f:
         json.dump(users, f, indent=4)
 
-def register_users(username: str, password: str, role: str) -> None:
+def register_users(username, password, role):
     users = load_users()
     new_id = max([u.get("id", 0) for u in users], default=0) + 1
     hashed_pw = hash_password(password)
@@ -82,7 +83,7 @@ def register_users(username: str, password: str, role: str) -> None:
     save_users(users)
     print("User added successfully!")
 
-def login_user(username: str, password: str) -> bool:
+def login_user(username, password):
     global current_user
     users = load_users()
     for user in users:
@@ -97,7 +98,8 @@ def login_user(username: str, password: str) -> bool:
                 return False
     print("Username not found!")
     return False
-def logout_user() -> None:
+
+def logout_user():
     global current_user
     if current_user:
         print(f"User {current_user['username']} logged out")
