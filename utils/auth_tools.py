@@ -15,19 +15,13 @@ schema: Dict[str, Any] = {
     "required": ["username", "password", "role"]
 }
 
-<<<<<<< HEAD
-# current_user is initialised after helpers are defined (see below)
-=======
-current_user: Optional[Dict[str, Any]] = None
->>>>>>> development
-
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 USER_FILE = os.path.join(DATA_DIR, "users.json")
 SESSION_FILE = os.path.join(DATA_DIR, "session.json")
 
 
-def _load_session():
+def _load_session() -> Optional[Dict[str, Any]]:
     """Load the persisted login session (if any) from disk."""
     try:
         with open(SESSION_FILE, "r") as f:
@@ -35,11 +29,9 @@ def _load_session():
     except (FileNotFoundError, json.JSONDecodeError):
         return None
 
-
-def _save_session(user):
+def _save_session(user: Dict[str, Any]) -> None:
     with open(SESSION_FILE, "w") as f:
         json.dump(user, f, indent=4)
-
 
 def _clear_session():
     try:
@@ -47,20 +39,15 @@ def _clear_session():
     except FileNotFoundError:
         pass
 
-
 current_user = _load_session()
-
 
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
-
 def verify_password(password: str, hashed_password: str) -> bool:
     return hash_password(password) == hashed_password
 
-
-<<<<<<< HEAD
-def load_users():
+def load_users() -> List[Dict[str, Any]]:
     try:
         with open(USER_FILE, "r") as f:
             return json.load(f)
@@ -70,34 +57,20 @@ def load_users():
         print("Access denied")
         return []
 
-
-def save_users(users):
+def save_users(users: List[Dict[str, Any]]) -> None:
     with open(USER_FILE, "w") as f:
         json.dump(users, f, indent=4)
 
-
-def register_users(username, password, role):
+def register_users(username: str, password: str, role: str) -> None:
     users = load_users()
     new_id = max([u.get("id", 0) for u in users], default=0) + 1
     hashed_pw = hash_password(password)
-    new_user = {"id": new_id, "username": username, "password": hashed_pw, "role": role}
-=======
-def load_user() -> List[Dict[str, Any]]:
-        try:
-                with open(FILE_PATH, "r") as file:
-                        return json.load(file)
-        except PermissionError:
-                print("Access denied")
-                return []
-
-
-def add_users(new_user: List[Dict[str, Any]]) -> None:
-            with open(FILE_PATH, "w") as file:
-                     json.dump(new_user, file, indent=4)
-              
-def register_users(username: str, password: str, role: str) -> None:
-        users = load_user()
->>>>>>> development
+    new_user: Dict[str, Any] = {
+        "id": new_id,
+        "username": username,
+        "password": hashed_pw,
+        "role": role
+    }
 
     try:
         validate(new_user, schema)
@@ -105,20 +78,18 @@ def register_users(username: str, password: str, role: str) -> None:
         print(f"Invalid user data: {e.message}")
         return
 
-<<<<<<< HEAD
     users.append(new_user)
     save_users(users)
-    print("[green]User added successfully![/green]")
+    print("User added successfully!")
 
-
-def login_user(username, password):
+def login_user(username: str, password: str) -> bool:
     global current_user
     users = load_users()
     for user in users:
         if user["username"] == username:
             if verify_password(password, user["password"]):
                 current_user = user
-                _save_session(user)  # persist session across invocations
+                _save_session(user)
                 print(f"Logged in as {username} ({user['role']})")
                 return True
             else:
@@ -126,52 +97,13 @@ def login_user(username, password):
                 return False
     print("Username not found!")
     return False
-
-
-=======
-        hashed_pw = hash_password(password)
-
-        new_user: Dict[str, Any] = {
-               "id": new_id,
-               "username" : username,
-               "password": hashed_pw,
-               "role" : role
-        }
-
-        try:
-                validate(instance=new_user, schema=schema)
-        except ValidationError as e:
-                print(f"Invalid user data: {e.message}")
-                return
-
-        users.append(new_user)
-        add_users(users)
-        print("User added successfuly!")
-
-
-def login_user(username: str, password: str) -> bool:
-        global current_user
-        users = load_user()
-        for user in users:
-                    if user['username'] == username:
-                            if verify_password(password, user["password"]):
-                                    current_user = user
-                                    print(f"Logged in as {username} ({user['role']})")
-                                    return True
-                            else:
-                                    print("Incorrect password!")
-                                    return False
-                            
-        
-        print("Username not found!")
-        return False
-                
->>>>>>> development
-def logout_user():
+def logout_user() -> None:
     global current_user
     if current_user:
         print(f"User {current_user['username']} logged out")
         current_user = None
-        _clear_session()  # remove persisted session
+        _clear_session()
     else:
         print("No user is currently logged in")
+
+current_user: Optional[Dict[str, Any]] = _load_session()

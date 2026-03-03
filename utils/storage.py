@@ -7,23 +7,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 PROJECT_FILE = os.path.join(DATA_DIR, "projects.json")
 
-<<<<<<< HEAD
-schema = {
-    "type": "array",
-    "items": {
-        "type": "object",
-        "required": ["id", "name", "description", "status", "owner", "time_created", "deadline", "tasks"],
-        "properties": {
-            "id": {"type": "number"},
-            "name": {"type": "string"},
-            "description": {"type": "string"},
-            "status": {"type": "string"},
-            "owner": {"type": "string"},
-            "time_created": {"type": "string"},
-            "deadline": {"type": "string"},
-            "tasks": {"type": "array"}
-        }
-=======
 #Generated a structure for validating the input details of project
 schema: Dict[str, Any] = {
   "type": "array",
@@ -34,10 +17,8 @@ schema: Dict[str, Any] = {
       "name": { "type": "string" },
       "description": { "type": "string" },
       "owner": {"type": "string"}
->>>>>>> development
     }
 }
-
 class JSONManager:
 
     @staticmethod
@@ -61,25 +42,6 @@ class JSONManager:
             print(f"[red]Invalid JSON: {e}[/red]")
             return []
 
-<<<<<<< HEAD
-    @staticmethod
-    def save_projects(data):
-        try:
-            validate(data, schema)
-            with open(PROJECT_FILE, "w") as f:
-                json.dump(data, f, indent=4)
-        except ValidationError as e:
-            print(f"[red]Invalid project data: {e}[/red]")
-
-    @staticmethod
-    def add_project(name, description, status, owner, time, deadline):
-        projects = JSONManager.load_projects()
-        new_id = max([p.get("id", 0) for p in projects], default=0) + 1
-        project = {
-            "id": new_id,
-            "name": name,
-            "description": description,
-=======
     @staticmethod  #used to define a method that doesnt depend on class
     def save_projects(data: List[Dict[str, Any]]) -> None:
         try:
@@ -110,7 +72,6 @@ class JSONManager:
             "id" : new_id,
             "name" : name,
             "description" : description,
->>>>>>> development
             "status": status,
             "owner": owner,
             "time_created": time,
@@ -124,3 +85,48 @@ class JSONManager:
     @staticmethod
     def list_projects():
         return JSONManager.load_projects()
+    
+    @staticmethod
+    def update_project(data):
+        project_id = int(input('Enter project id to update : '))
+
+        project = next((p for p in data if p["id"] == project_id), None)
+
+        if not project:
+            print("Project not found")
+            return
+        
+        project["name"] = input("Enter a new project name :")
+        project["description"] = input("Enter a new project description :")
+
+        try:
+            with open(PROJECT_FILE, "w") as file:
+                json.dump(data, file, indent=4)
+                print("Project updated successfuly!")
+        except Exception as e:
+            print(f"Error:, {e}")
+            return[]
+
+    @staticmethod
+    def delete_project(data):
+
+        project_id = int(input("Enter project id to delete :"))
+
+        project = next((p for p in data if p["id"] == project_id), None)
+
+        if not project:
+            print("Project not found")
+            return
+        
+        data.remove(project)
+
+        try:
+            with open(PROJECT_FILE, "w") as file:
+                json.dump(data, file, indent=4)
+            print("Project deleted successfully!")
+        except Exception as e:
+            print(f"Error: {e}")
+
+
+
+        
