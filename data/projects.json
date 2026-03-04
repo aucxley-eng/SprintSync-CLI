@@ -11,8 +11,8 @@
     },
     {
         "id": 2,
-        "name": "Website",
-        "description": "Company website with React frontend",
+        "name": "Toolbox",
+        "description": "A project to help store tools in a workshop",
         "status": "Active",
         "owner": "admin",
         "time_created": "2026-03-01 10:15:00",
@@ -47,6 +47,16 @@
         "owner": "Hillary",
         "time_created": "2026-03-02 16:03:10",
         "deadline": "2026-04-19",
+        "tasks": []
+    },
+    {
+        "id": 6,
+        "name": "Smart Tool management",
+        "description": "A project for a smart tool system using embedded systems",
+        "status": "Active",
+        "owner": "Hillary",
+        "time_created": "2026-03-03 20:10:04",
+        "deadline": "2025-05-04",
         "tasks": []
     }
 ]

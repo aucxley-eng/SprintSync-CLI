@@ -90,9 +90,10 @@ def main():
     print_header()
 
     while True:
+        # Always read the freshest current_user from the module
         user = auth_tools.current_user
 
-        console.print("")
+        console.print("")  # blank line for breathing room
 
         if user:
             console.print(
@@ -102,7 +103,6 @@ def main():
             console.print("\n[bold]Select an option:[/bold]")
             console.print("  [cyan]1.[/cyan] Add Project")
             console.print("  [cyan]2.[/cyan] List Projects")
-            console.print("  [cyan]3.[/cyan] Update Project")
             console.print("  [cyan]9.[/cyan] Switch Account")
             console.print("  [cyan]0.[/cyan] Exit")
             console.print("")

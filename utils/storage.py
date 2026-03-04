@@ -78,11 +78,12 @@ class JSONManager:
         return JSONManager.load_projects()
 
     @staticmethod
-    def update_project(data):
+    def update_project():
+        data = JSONManager.load_projects()
         project_id = int(input('Enter project id to update : '))
         project = next((p for p in data if p["id"] == project_id), None)
 
-        if not project:
+        if not data:
             print("Project not found")
             return
 
@@ -95,7 +96,6 @@ class JSONManager:
                 print("Project updated successfully!")
         except Exception as e:
             print(f"Error:, {e}")
-            return []
 
     @staticmethod
     def delete_project(data):

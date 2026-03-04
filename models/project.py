@@ -10,14 +10,14 @@ class Project:
         self.project_id: str = str(uuid.uuid4())[:8]
         self.title: str = title
         self.description: str = description
-        self.members: List[str] = [] # List of user emails (Replacing Tasks)
+        self.members: List[str] = [] # List of user emails
 
         try:
             self.due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date()
         except ValueError:
             raise ValueError("Invalid date format. Use YYYY-MM-DD.")
 
-    # Business Logic: Add a user (member) to the project
+    # Add a user (member) to the project
     def add_member(self, user_email: str) -> bool:
         if user_email not in self.members:
             self.members.append(user_email)

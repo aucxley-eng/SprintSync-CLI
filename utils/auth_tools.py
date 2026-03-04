@@ -14,7 +14,7 @@ schema: Dict[str, Any] = {
     },
     "required": ["username", "password", "role"]
 }
-# current_user is initialised after helpers are defined (see below)
+# current_user is initialised after helpers are defined
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
